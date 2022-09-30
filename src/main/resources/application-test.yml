@@ -39,9 +39,9 @@ wutsi:
           access-token: ${BITLY_ACCESS_TOKEN}
       whatsapp:
         type: cloud
-          cloud:
-            access-token: ${WHATSAPP_ACCESS_TOKEN}
-            phone-id: ${WHATSAPP_PHONE_ID}
+        cloud:
+          access-token: ${WHATSAPP_ACCESS_TOKEN}
+          phone-id: ${WHATSAPP_PHONE_ID}
     stream:
       type: rabbitmq
       rabbitmq:
