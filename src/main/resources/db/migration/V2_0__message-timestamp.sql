@@ -1,0 +1,3 @@
+ALTER TABLE T_MESSAGE ADD COLUMN timestamp BIGINT DEFAULT 0;
+CREATE INDEX I_MESSAGE_timestamp ON T_MESSAGE(timestamp);
+DROP INDEX I_MESSAGE_conversation_id_created;

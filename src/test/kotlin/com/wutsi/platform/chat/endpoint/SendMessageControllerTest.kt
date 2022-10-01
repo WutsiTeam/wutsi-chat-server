@@ -40,7 +40,8 @@ public class SendMessageControllerTest : AbstractSecuredController() {
         // WHEN
         val request = SendMessageRequest(
             recipientId = 555,
-            text = "Hello world"
+            text = "Hello world",
+            timestamp = 32932090
         )
         val response = rest.postForEntity(url, request, SendMessageResponse::class.java)
 
@@ -53,6 +54,7 @@ public class SendMessageControllerTest : AbstractSecuredController() {
         assertEquals(USER_ID, msg.senderId)
         assertEquals(request.recipientId, msg.recipientId)
         assertEquals(request.text, msg.text)
+        assertEquals(request.timestamp, msg.timestamp)
         assertEquals("1d2bfaf1c4bd7b5ea43f5c873d967c57", msg.conversationId)
 
         val payload = MessageEventPayload(

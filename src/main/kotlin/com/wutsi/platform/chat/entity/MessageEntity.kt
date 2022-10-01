@@ -20,5 +20,6 @@ data class MessageEntity(
     val conversationId: String = "",
     val text: String = "",
     val created: OffsetDateTime = OffsetDateTime.now(),
-    val deviceId: String? = null
+    val deviceId: String? = null,
+    val timestamp: Long = -1
 )

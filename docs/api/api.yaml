@@ -93,6 +93,9 @@ components:
           format: int64
         text:
           type: string
+        timestamp:
+          type: integer
+          format: int64
       required:
         - text
 
@@ -110,6 +113,14 @@ components:
         conversationId:
           type: string
           format: uuid
+          nullable: true
+        accountId1:
+          type: integer
+          format: int64
+          nullable: true
+        accountId2:
+          type: integer
+          format: int64
           nullable: true
         limit:
           type: integer
@@ -143,6 +154,9 @@ components:
           format: int64
         text:
           type: string
+        timestamp:
+          type: integer
+          format: int64
         created:
           type: string
           format: date-time

@@ -11,7 +11,8 @@ fun MessageEntity.toMessage() = Message(
     recipientId = this.recipientId,
     text = this.text,
     created = this.created,
-    deviceId = this.deviceId
+    deviceId = this.deviceId,
+    timestamp = this.timestamp
 )
 
 fun MessageEntity.toConversation() = Conversation(

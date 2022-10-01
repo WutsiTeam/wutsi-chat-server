@@ -38,7 +38,7 @@ public class SearchMessagesDelegate(
         return if (where.isNullOrEmpty()) {
             select
         } else {
-            "$select WHERE $where ORDER BY a.created DESC"
+            "$select WHERE $where ORDER BY a.timestamp DESC"
         }
     }
 
@@ -51,12 +51,24 @@ public class SearchMessagesDelegate(
         if (!request.conversationId.isNullOrEmpty()) {
             criteria.add("a.conversationId = :conversation_id")
         }
+        if (request.accountId1 != null) {
+            criteria.add("(a.senderId = :account_id1 OR a.recipientId = :account_id1)")
+        }
+        if (request.accountId2 != null) {
+            criteria.add("(a.senderId = :account_id2 OR a.recipientId = :account_id2)")
+        }
         return criteria.joinToString(separator = " AND ")
     }
 
     private fun parameters(request: SearchMessageRequest, query: Query) {
         if (!request.conversationId.isNullOrEmpty()) {
             query.setParameter("conversation_id", request.conversationId)
+        }
+        if (request.accountId1 != null) {
+            query.setParameter("account_id1", request.accountId1)
+        }
+        if (request.accountId2 != null) {
+            query.setParameter("account_id2", request.accountId2)
         }
     }
 }

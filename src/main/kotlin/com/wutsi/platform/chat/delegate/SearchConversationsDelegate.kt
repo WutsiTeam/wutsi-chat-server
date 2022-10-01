@@ -36,13 +36,13 @@ public class SearchConversationsDelegate(
         val currentUserId = securityManager.currentUserId()
         val tenantId = tracingContext.tenantId()
         val sql = """
-            SELECT MAX(id) as max_id, MAX(created), conversation_id
+            SELECT MAX(id) as max_id, MAX(timestamp), conversation_id
             FROM T_MESSAGE
             WHERE
                 (sender_id=$currentUserId OR recipient_id=$currentUserId)
                 AND tenant_id=$tenantId
             GROUP BY conversation_id
-            ORDER BY MAX(created) DESC
+            ORDER BY MAX(timestamp) DESC
             LIMIT ${request.limit}
             OFFSET ${request.offset}
         """.trimIndent()

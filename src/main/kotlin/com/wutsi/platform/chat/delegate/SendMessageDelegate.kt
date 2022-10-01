@@ -30,7 +30,8 @@ public class SendMessageDelegate(
                 recipientId = request.recipientId,
                 created = OffsetDateTime.now(),
                 conversationId = generateConversationId(request),
-                text = request.text
+                text = request.text,
+                timestamp = request.timestamp
             )
         )
         notify(msg)
