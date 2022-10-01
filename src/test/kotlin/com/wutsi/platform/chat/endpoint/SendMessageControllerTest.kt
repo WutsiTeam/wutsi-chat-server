@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.server.LocalServerPort
+import java.util.UUID
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -41,7 +42,8 @@ public class SendMessageControllerTest : AbstractSecuredController() {
         val request = SendMessageRequest(
             recipientId = 555,
             text = "Hello world",
-            timestamp = 32932090
+            timestamp = 32932090,
+            referenceId = UUID.randomUUID().toString()
         )
         val response = rest.postForEntity(url, request, SendMessageResponse::class.java)
 
@@ -55,6 +57,7 @@ public class SendMessageControllerTest : AbstractSecuredController() {
         assertEquals(request.recipientId, msg.recipientId)
         assertEquals(request.text, msg.text)
         assertEquals(request.timestamp, msg.timestamp)
+        assertEquals(request.recipientId, msg.recipientId)
         assertEquals("1d2bfaf1c4bd7b5ea43f5c873d967c57", msg.conversationId)
 
         val payload = MessageEventPayload(

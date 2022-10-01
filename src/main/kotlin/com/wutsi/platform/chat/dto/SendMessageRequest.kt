@@ -5,6 +5,8 @@ import kotlin.Long
 import kotlin.String
 
 public data class SendMessageRequest(
+    @get:NotBlank
+    public val referenceId: String = "",
     public val recipientId: Long = 0,
     @get:NotBlank
     public val text: String = "",

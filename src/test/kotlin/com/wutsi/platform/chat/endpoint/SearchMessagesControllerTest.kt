@@ -39,6 +39,7 @@ public class SearchMessagesControllerTest : AbstractSecuredController() {
         assertEquals(3, messages.size)
 
         assertEquals(102, messages[0].id)
+        assertEquals("102", messages[0].referenceId)
         assertEquals(request.conversationId, messages[0].conversationId)
         assertEquals(100, messages[0].senderId)
         assertEquals(101, messages[0].recipientId)
@@ -47,6 +48,7 @@ public class SearchMessagesControllerTest : AbstractSecuredController() {
         assertEquals(1000, messages[0].timestamp)
 
         assertEquals(101, messages[1].id)
+        assertEquals("101", messages[1].referenceId)
         assertEquals(request.conversationId, messages[1].conversationId)
         assertEquals(101, messages[1].senderId)
         assertEquals(100, messages[1].recipientId)
@@ -55,6 +57,7 @@ public class SearchMessagesControllerTest : AbstractSecuredController() {
         assertEquals(900, messages[1].timestamp)
 
         assertEquals(100, messages[2].id)
+        assertEquals("100", messages[2].referenceId)
         assertEquals(request.conversationId, messages[2].conversationId)
         assertEquals(100, messages[2].senderId)
         assertEquals(101, messages[2].recipientId)
@@ -79,6 +82,7 @@ public class SearchMessagesControllerTest : AbstractSecuredController() {
         assertEquals(3, messages.size)
 
         assertEquals(102, messages[0].id)
+        assertEquals("102", messages[0].referenceId)
         assertEquals("100,101", messages[0].conversationId)
         assertEquals(100, messages[0].senderId)
         assertEquals(101, messages[0].recipientId)
@@ -87,6 +91,7 @@ public class SearchMessagesControllerTest : AbstractSecuredController() {
         assertEquals(1000, messages[0].timestamp)
 
         assertEquals(101, messages[1].id)
+        assertEquals("101", messages[1].referenceId)
         assertEquals("100,101", messages[1].conversationId)
         assertEquals(101, messages[1].senderId)
         assertEquals(100, messages[1].recipientId)
@@ -95,6 +100,7 @@ public class SearchMessagesControllerTest : AbstractSecuredController() {
         assertEquals(900, messages[1].timestamp)
 
         assertEquals(100, messages[2].id)
+        assertEquals("100", messages[2].referenceId)
         assertEquals("100,101", messages[2].conversationId)
         assertEquals(100, messages[2].senderId)
         assertEquals(101, messages[2].recipientId)

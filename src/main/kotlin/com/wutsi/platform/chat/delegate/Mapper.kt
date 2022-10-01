@@ -12,7 +12,8 @@ fun MessageEntity.toMessage() = Message(
     text = this.text,
     created = this.created,
     deviceId = this.deviceId,
-    timestamp = this.timestamp
+    timestamp = this.timestamp,
+    referenceId = this.referenceId
 )
 
 fun MessageEntity.toConversation() = Conversation(

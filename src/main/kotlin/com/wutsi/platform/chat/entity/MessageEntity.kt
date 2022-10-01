@@ -18,6 +18,7 @@ data class MessageEntity(
     val senderId: Long = -1,
     val recipientId: Long = -1,
     val conversationId: String = "",
+    val referenceId: String = "",
     val text: String = "",
     val created: OffsetDateTime = OffsetDateTime.now(),
     val deviceId: String? = null,
