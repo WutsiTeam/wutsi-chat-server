@@ -3,6 +3,7 @@ package com.wutsi.platform.chat.endpoint
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.platform.chat.dao.MessageRepository
 import com.wutsi.platform.chat.dto.SendMessageRequest
@@ -14,10 +15,12 @@ import com.wutsi.platform.chat.service.NotificationService
 import com.wutsi.platform.core.stream.EventStream
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.web.client.HttpClientErrorException
 import java.util.UUID
 import kotlin.test.assertEquals
 
@@ -77,5 +80,20 @@ class SendMessageControllerTest : AbstractSecuredController() {
         val message = argumentCaptor<MessageEntity>()
         verify(notificationService).onMessageSent(message.capture(), any(), eq(EventURN.MESSAGE_SENT))
         assertEquals(id, message.firstValue.id)
+    }
+
+    @Test
+    fun emptyMessage() {
+        // WHEN
+        val request = SendMessageRequest()
+        val ex = assertThrows<HttpClientErrorException> {
+            rest.postForEntity(url, request, SendMessageResponse::class.java)
+        }
+
+        // THEN
+        assertEquals(400, ex.rawStatusCode)
+        verify(eventStream, never()).publish(any(), any())
+
+        verify(notificationService, never()).onMessageSent(any(), any(), any())
     }
 }
