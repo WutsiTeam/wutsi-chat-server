@@ -6,10 +6,14 @@ import com.wutsi.platform.chat.dto.SendMessageResponse
 import com.wutsi.platform.chat.entity.MessageEntity
 import com.wutsi.platform.chat.event.EventURN
 import com.wutsi.platform.chat.event.MessageEventPayload
+import com.wutsi.platform.chat.service.NotificationService
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.core.tracing.TracingContext
+import com.wutsi.platform.tenant.WutsiTenantApi
+import com.wutsi.platform.tenant.dto.Tenant
 import org.apache.commons.codec.digest.DigestUtils
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
 
@@ -19,13 +23,21 @@ public class SendMessageDelegate(
     private val dao: MessageRepository,
     private val tracingContext: TracingContext,
     private val logger: KVLogger,
-    private val eventStream: EventStream
+    private val eventStream: EventStream,
+    private val tenantApi: WutsiTenantApi,
+    private val notificationService: NotificationService
 ) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(SendMessageRequest::class.java)
+    }
+
     public fun invoke(request: SendMessageRequest): SendMessageResponse {
+        // Store
+        val tenantId = tracingContext.tenantId()!!.toLong()
         val msg = dao.save(
             MessageEntity(
                 deviceId = tracingContext.deviceId(),
-                tenantId = tracingContext.tenantId()?.toLong() ?: -1,
+                tenantId = tenantId,
                 senderId = securityManager.currentUserId() ?: -1,
                 recipientId = request.recipientId,
                 created = OffsetDateTime.now(),
@@ -35,7 +47,13 @@ public class SendMessageDelegate(
                 referenceId = request.referenceId
             )
         )
-        notify(msg)
+
+        // Notify recipient
+        val tenant = tenantApi.getTenant(tenantId).tenant
+        notify(msg, tenant)
+
+        // Publish
+        publish(msg)
 
         logger.add("message_id", msg.id)
         return SendMessageResponse(
@@ -50,9 +68,16 @@ public class SendMessageDelegate(
                 .joinToString(",")
         )
 
-    private fun notify(message: MessageEntity) {
+    private fun notify(msg: MessageEntity, tenant: Tenant) {
+        try {
+            notificationService.onMessageSent(msg, tenant, EventURN.MESSAGE_SENT)
+        } catch (ex: Exception) {
+            LOGGER.warn("Unable to send notification", ex)
+        }
+    }
+
+    private fun publish(message: MessageEntity) {
         val payload = MessageEventPayload(message.id ?: -1, message.conversationId)
-        eventStream.enqueue(EventURN.MESSAGE_SENT.urn, payload)
         eventStream.publish(EventURN.MESSAGE_SENT.urn, payload)
     }
 }

@@ -1,11 +1,16 @@
 package com.wutsi.platform.chat.endpoint
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.wutsi.platform.chat.dao.MessageRepository
 import com.wutsi.platform.chat.dto.SendMessageRequest
 import com.wutsi.platform.chat.dto.SendMessageResponse
+import com.wutsi.platform.chat.entity.MessageEntity
 import com.wutsi.platform.chat.event.EventURN
 import com.wutsi.platform.chat.event.MessageEventPayload
+import com.wutsi.platform.chat.service.NotificationService
 import com.wutsi.platform.core.stream.EventStream
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,9 +22,9 @@ import java.util.UUID
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class SendMessageControllerTest : AbstractSecuredController() {
+class SendMessageControllerTest : AbstractSecuredController() {
     @LocalServerPort
-    public val port: Int = 0
+    val port: Int = 0
 
     @Autowired
     private lateinit var dao: MessageRepository
@@ -29,6 +34,9 @@ public class SendMessageControllerTest : AbstractSecuredController() {
     @MockBean
     private lateinit var eventStream: EventStream
 
+    @MockBean
+    private lateinit var notificationService: NotificationService
+
     @BeforeEach
     override fun setUp() {
         super.setUp()
@@ -37,7 +45,7 @@ public class SendMessageControllerTest : AbstractSecuredController() {
     }
 
     @Test
-    public fun invoke() {
+    fun invoke() {
         // WHEN
         val request = SendMessageRequest(
             recipientId = 555,
@@ -64,7 +72,10 @@ public class SendMessageControllerTest : AbstractSecuredController() {
             messageId = msg.id ?: -1,
             conversationId = msg.conversationId
         )
-        verify(eventStream).enqueue(EventURN.MESSAGE_SENT.urn, payload)
         verify(eventStream).publish(EventURN.MESSAGE_SENT.urn, payload)
+
+        val message = argumentCaptor<MessageEntity>()
+        verify(notificationService).onMessageSent(message.capture(), any(), eq(EventURN.MESSAGE_SENT))
+        assertEquals(id, message.firstValue.id)
     }
 }

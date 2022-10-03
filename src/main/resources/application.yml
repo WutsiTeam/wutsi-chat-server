@@ -94,6 +94,8 @@ wutsi:
     stream:
       name: ${wutsi.application.name}
       type: local
+      subscriptions:
+        - wutsi-chat-bff
     tracing:
       client-id: ${wutsi.application.name}
       device-id-provider:
