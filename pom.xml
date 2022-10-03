@@ -31,7 +31,7 @@
     <klint.version>0.47.1</klint.version>
     <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
     <hikari-cp.version>5.0.1</hikari-cp.version>
-    <postgresql.version>42.4.0</postgresql.version>
+    <postgresql.version>42.4.1</postgresql.version>
     <flyway.version>8.5.13</flyway.version>
 
     <wutsi-security.version>0.0.30</wutsi-security.version>
