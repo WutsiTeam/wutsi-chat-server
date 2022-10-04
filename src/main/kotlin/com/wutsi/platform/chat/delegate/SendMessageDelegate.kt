@@ -12,7 +12,6 @@ import com.wutsi.platform.core.stream.EventStream
 import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.platform.tenant.WutsiTenantApi
 import com.wutsi.platform.tenant.dto.Tenant
-import org.apache.commons.codec.digest.DigestUtils
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
@@ -41,7 +40,7 @@ public class SendMessageDelegate(
                 senderId = securityManager.currentUserId() ?: -1,
                 recipientId = request.recipientId,
                 created = OffsetDateTime.now(),
-                conversationId = generateConversationId(request),
+                conversationId = request.conversationId,
                 text = request.text,
                 timestamp = request.timestamp,
                 referenceId = request.referenceId
@@ -60,13 +59,6 @@ public class SendMessageDelegate(
             id = msg.id!!
         )
     }
-
-    private fun generateConversationId(request: SendMessageRequest): String =
-        DigestUtils.md5Hex(
-            listOfNotNull(request.recipientId, securityManager.currentUserId())
-                .sorted()
-                .joinToString(",")
-        )
 
     private fun notify(msg: MessageEntity, tenant: Tenant) {
         try {

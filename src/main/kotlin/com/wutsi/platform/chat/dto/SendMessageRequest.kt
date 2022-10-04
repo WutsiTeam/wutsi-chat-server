@@ -6,6 +6,8 @@ import kotlin.String
 
 public data class SendMessageRequest(
     @get:NotBlank
+    public val conversationId: String = "",
+    @get:NotBlank
     public val referenceId: String = "",
     public val recipientId: Long = 0,
     @get:NotBlank

@@ -88,6 +88,9 @@ components:
     SendMessageRequest:
       type: object
       properties:
+        conversationId:
+          type: string
+          format: uuid
         referenceId:
           type: string
           format: uuid
@@ -102,6 +105,7 @@ components:
       required:
         - text
         - referenceId
+        - conversationId
 
     SendMessageResponse:
       type: object
