@@ -94,6 +94,8 @@ wutsi:
     stream:
       name: ${wutsi.application.name}
       type: local
+      subscriptions:
+        - wutsi-rtm
     tracing:
       client-id: ${wutsi.application.name}
       device-id-provider:

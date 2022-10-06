@@ -2,12 +2,12 @@ package com.wutsi.platform.chat.service
 
 import com.wutsi.platform.account.WutsiAccountApi
 import com.wutsi.platform.chat.entity.MessageEntity
-import com.wutsi.platform.chat.event.EventURN
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.MessagingServiceProvider
 import com.wutsi.platform.core.messaging.MessagingType
 import com.wutsi.platform.core.messaging.Party
+import com.wutsi.platform.rtm.event.EventURN
 import com.wutsi.platform.tenant.dto.Tenant
 import org.springframework.stereotype.Service
 

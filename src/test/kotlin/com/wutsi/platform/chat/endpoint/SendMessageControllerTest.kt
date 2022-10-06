@@ -9,10 +9,8 @@ import com.wutsi.platform.chat.dao.MessageRepository
 import com.wutsi.platform.chat.dto.SendMessageRequest
 import com.wutsi.platform.chat.dto.SendMessageResponse
 import com.wutsi.platform.chat.entity.MessageEntity
-import com.wutsi.platform.chat.event.EventURN
-import com.wutsi.platform.chat.event.MessageEventPayload
 import com.wutsi.platform.chat.service.NotificationService
-import com.wutsi.platform.core.stream.EventStream
+import com.wutsi.platform.rtm.event.EventURN
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -33,9 +31,6 @@ class SendMessageControllerTest : AbstractSecuredController() {
     private lateinit var dao: MessageRepository
 
     private lateinit var url: String
-
-    @MockBean
-    private lateinit var eventStream: EventStream
 
     @MockBean
     private lateinit var notificationService: NotificationService
@@ -72,12 +67,6 @@ class SendMessageControllerTest : AbstractSecuredController() {
         assertEquals(request.recipientId, msg.recipientId)
         assertEquals(request.conversationId, msg.conversationId)
 
-        val payload = MessageEventPayload(
-            messageId = msg.id ?: -1,
-            conversationId = msg.conversationId
-        )
-        verify(eventStream).publish(EventURN.MESSAGE_SENT.urn, payload)
-
         val message = argumentCaptor<MessageEntity>()
         verify(notificationService).onMessageSent(message.capture(), any(), eq(EventURN.MESSAGE_SENT))
         assertEquals(id, message.firstValue.id)
@@ -93,8 +82,6 @@ class SendMessageControllerTest : AbstractSecuredController() {
 
         // THEN
         assertEquals(400, ex.rawStatusCode)
-        verify(eventStream, never()).publish(any(), any())
-
         verify(notificationService, never()).onMessageSent(any(), any(), any())
     }
 }

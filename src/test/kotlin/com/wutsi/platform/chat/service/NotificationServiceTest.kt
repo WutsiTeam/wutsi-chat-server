@@ -10,11 +10,11 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.platform.account.dto.GetAccountResponse
 import com.wutsi.platform.chat.endpoint.AbstractSecuredController
 import com.wutsi.platform.chat.entity.MessageEntity
-import com.wutsi.platform.chat.event.EventURN
 import com.wutsi.platform.core.messaging.Message
 import com.wutsi.platform.core.messaging.MessagingService
 import com.wutsi.platform.core.messaging.MessagingServiceProvider
 import com.wutsi.platform.core.messaging.MessagingType
+import com.wutsi.platform.rtm.event.EventURN
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
