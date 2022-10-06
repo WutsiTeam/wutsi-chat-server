@@ -28,11 +28,14 @@ public class SendMessageDelegate(
     }
 
     fun invoke(request: SendMessageRequest): SendMessageResponse =
-        send(request, securityManager.currentUserId() ?: -1)
+        send(
+            request = request,
+            senderId = securityManager.currentUserId() ?: -1,
+            tenantId = tracingContext.tenantId()?.toLong() ?: -1
+        )
 
-    fun send(request: SendMessageRequest, senderId: Long): SendMessageResponse {
+    fun send(request: SendMessageRequest, senderId: Long, tenantId: Long): SendMessageResponse {
         // Store
-        val tenantId = tracingContext.tenantId()!!.toLong()
         val msg = dao.save(
             MessageEntity(
                 deviceId = tracingContext.deviceId(),

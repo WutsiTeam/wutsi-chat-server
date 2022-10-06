@@ -27,7 +27,8 @@ class EventHandler(
                     timestamp = payload.chatMessage?.createdAt ?: -1,
                     recipientId = payload.chatMessage?.metadata?.get("recipientId")?.toString()?.toLong() ?: -1
                 ),
-                senderId = payload.chatMessage?.author?.id?.toLong() ?: -1
+                senderId = payload.chatMessage?.author?.id?.toLong() ?: -1,
+                tenantId = payload.chatMessage?.metadata?.get("tenantId")?.toString()?.toLong() ?: -1
             )
         }
     }
