@@ -31,6 +31,7 @@ internal class EventHandlerTest {
         val senderId = 100L
         val recipientId = 101L
         val tenantId = 1L
+        val deviceId = "xxxx"
         val payload = MessageSentEventPayload(
             serverId = UUID.randomUUID().toString(),
             sessionId = UUID.randomUUID().toString(),
@@ -44,7 +45,8 @@ internal class EventHandlerTest {
                 text = "Hello world",
                 metadata = mapOf(
                     "recipientId" to recipientId,
-                    "tenantId" to tenantId
+                    "tenantId" to tenantId,
+                    "deviceId" to deviceId
                 )
             )
         )
@@ -58,7 +60,7 @@ internal class EventHandlerTest {
 
         // WHEN
         val request = argumentCaptor<SendMessageRequest>()
-        verify(delegate).send(request.capture(), eq(senderId), eq(tenantId))
+        verify(delegate).send(request.capture(), eq(senderId), eq(tenantId), eq(deviceId))
 
         assertEquals(payload.chatMessage?.roomId, request.firstValue.conversationId)
         assertEquals(payload.chatMessage?.id, request.firstValue.referenceId)

@@ -20,14 +20,15 @@ public class SendMessageDelegate(
         send(
             request = request,
             senderId = securityManager.currentUserId() ?: -1,
-            tenantId = tracingContext.tenantId()?.toLong() ?: -1
+            tenantId = tracingContext.tenantId()?.toLong() ?: -1,
+            deviceId = tracingContext.deviceId()
         )
 
-    fun send(request: SendMessageRequest, senderId: Long, tenantId: Long): SendMessageResponse {
+    fun send(request: SendMessageRequest, senderId: Long, tenantId: Long, deviceId: String?): SendMessageResponse {
         // Store
         val msg = dao.save(
             MessageEntity(
-                deviceId = tracingContext.deviceId(),
+                deviceId = deviceId,
                 tenantId = tenantId,
                 senderId = senderId,
                 recipientId = request.recipientId,
