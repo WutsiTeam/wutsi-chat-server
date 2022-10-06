@@ -4,13 +4,8 @@ import com.wutsi.platform.chat.dao.MessageRepository
 import com.wutsi.platform.chat.dto.SendMessageRequest
 import com.wutsi.platform.chat.dto.SendMessageResponse
 import com.wutsi.platform.chat.entity.MessageEntity
-import com.wutsi.platform.chat.service.NotificationService
 import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.tracing.TracingContext
-import com.wutsi.platform.rtm.event.EventURN
-import com.wutsi.platform.tenant.WutsiTenantApi
-import com.wutsi.platform.tenant.dto.Tenant
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
 
@@ -19,14 +14,8 @@ public class SendMessageDelegate(
     private val securityManager: com.wutsi.platform.chat.service.SecurityManager,
     private val dao: MessageRepository,
     private val tracingContext: TracingContext,
-    private val logger: KVLogger,
-    private val tenantApi: WutsiTenantApi,
-    private val notificationService: NotificationService
+    private val logger: KVLogger
 ) {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(SendMessageRequest::class.java)
-    }
-
     fun invoke(request: SendMessageRequest): SendMessageResponse =
         send(
             request = request,
@@ -50,21 +39,9 @@ public class SendMessageDelegate(
             )
         )
 
-        // Notify recipient
-        val tenant = tenantApi.getTenant(tenantId).tenant
-        notify(msg, tenant)
-
         logger.add("message_id", msg.id)
         return SendMessageResponse(
             id = msg.id!!
         )
-    }
-
-    private fun notify(msg: MessageEntity, tenant: Tenant) {
-        try {
-            notificationService.onMessageSent(msg, tenant, EventURN.MESSAGE_SENT)
-        } catch (ex: Exception) {
-            LOGGER.warn("Unable to send notification", ex)
-        }
     }
 }
