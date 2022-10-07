@@ -3,17 +3,16 @@ package com.wutsi.platform.chat.endpoint
 import com.wutsi.platform.chat.dao.MessageRepository
 import com.wutsi.platform.chat.dto.SendMessageRequest
 import com.wutsi.platform.chat.dto.SendMessageResponse
-import com.wutsi.platform.chat.service.NotificationService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.web.client.HttpClientErrorException
 import java.util.UUID
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SendMessageControllerTest : AbstractSecuredController() {
@@ -24,9 +23,6 @@ class SendMessageControllerTest : AbstractSecuredController() {
     private lateinit var dao: MessageRepository
 
     private lateinit var url: String
-
-    @MockBean
-    private lateinit var notificationService: NotificationService
 
     @BeforeEach
     override fun setUp() {
@@ -57,12 +53,8 @@ class SendMessageControllerTest : AbstractSecuredController() {
         assertEquals(request.recipientId, msg.recipientId)
         assertEquals(request.text, msg.text)
         assertEquals(request.timestamp, msg.timestamp)
-        assertEquals(request.recipientId, msg.recipientId)
         assertEquals(request.conversationId, msg.conversationId)
-
-//        val message = argumentCaptor<MessageEntity>()
-//        verify(notificationService).onMessageSent(message.capture(), any(), eq(EventURN.MESSAGE_SENT))
-//        assertEquals(id, message.firstValue.id)
+        assertNull(msg.received)
     }
 
     @Test
@@ -75,6 +67,5 @@ class SendMessageControllerTest : AbstractSecuredController() {
 
         // THEN
         assertEquals(400, ex.rawStatusCode)
-//        verify(notificationService, never()).onMessageSent(any(), any(), any())
     }
 }

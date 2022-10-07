@@ -13,7 +13,8 @@ fun MessageEntity.toMessage() = Message(
     created = this.created,
     deviceId = this.deviceId,
     timestamp = this.timestamp,
-    referenceId = this.referenceId
+    referenceId = this.referenceId,
+    received = this.received
 )
 
 fun MessageEntity.toConversation() = Conversation(

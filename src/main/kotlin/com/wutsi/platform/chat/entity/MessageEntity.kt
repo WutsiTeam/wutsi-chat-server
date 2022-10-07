@@ -22,5 +22,6 @@ data class MessageEntity(
     val text: String = "",
     val created: OffsetDateTime = OffsetDateTime.now(),
     val deviceId: String? = null,
-    val timestamp: Long = -1
+    val timestamp: Long = -1,
+    var received: OffsetDateTime? = null
 )

@@ -8,6 +8,7 @@ import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.core.tracing.TracingContext
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
+import javax.transaction.Transactional
 
 @Service
 public class SendMessageDelegate(
@@ -16,6 +17,7 @@ public class SendMessageDelegate(
     private val tracingContext: TracingContext,
     private val logger: KVLogger
 ) {
+    @Transactional
     fun invoke(request: SendMessageRequest): SendMessageResponse =
         send(
             request = request,
@@ -24,6 +26,7 @@ public class SendMessageDelegate(
             deviceId = tracingContext.deviceId()
         )
 
+    @Transactional
     fun send(request: SendMessageRequest, senderId: Long, tenantId: Long, deviceId: String?): SendMessageResponse {
         // Store
         val msg = dao.save(
