@@ -38,10 +38,10 @@ public class SearchConversationsControllerTest : AbstractSecuredController() {
         assertEquals("100,400", conversations[0].id)
         assertEquals(400L, conversations[0].lastMessage.id)
 
-        assertEquals("100,101", conversations[1].id)
-        assertEquals(102, conversations[1].lastMessage.id)
+        assertEquals("100,200", conversations[1].id)
+        assertEquals(200L, conversations[1].lastMessage.id)
 
-        assertEquals("100,200", conversations[2].id)
-        assertEquals(200L, conversations[2].lastMessage.id)
+        assertEquals("100,101", conversations[2].id)
+        assertEquals(102, conversations[2].lastMessage.id)
     }
 }
