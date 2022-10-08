@@ -27,6 +27,8 @@ public class SearchConversationsDelegate(
             .sortedWith(
                 compareBy { ids.indexOf(it.id) }
             )
+
+        logger.add("count", messages.size)
         return SearchConversationResponse(
             conversations = messages.map { it.toConversation() }
         )

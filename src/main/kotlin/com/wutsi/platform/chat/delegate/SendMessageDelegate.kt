@@ -28,6 +28,11 @@ public class SendMessageDelegate(
 
     @Transactional
     fun send(request: SendMessageRequest, senderId: Long, tenantId: Long, deviceId: String?): SendMessageResponse {
+        logger.add("sender_id", senderId)
+        logger.add("recipient_id", request.recipientId)
+        logger.add("conversation_id", request.conversationId)
+        logger.add("timestamp", request.timestamp)
+
         // Store
         val msg = dao.save(
             MessageEntity(
