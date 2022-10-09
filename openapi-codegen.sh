@@ -19,7 +19,6 @@ java -jar ${CODEGEN_JAR} server \
     -service_api_key \
     -service_database \
     -service_logger \
-    -service_messaging \
     -service_mqueue \
     -service_slack
 
